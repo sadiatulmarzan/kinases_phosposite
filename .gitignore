@@ -165,4 +165,3 @@ practise.ipynb
 # the data folder 
 data/
 *.pkl
-*.csv
