@@ -156,3 +156,51 @@ def convert_to_normalize_matrix(df, columns_to_keep, suffix = ''):
     # final_df.set_index('Family', inplace=True)
     
     return final_df
+
+def plotting_pssm_only_heatmap(psp, johnson, scope3p, common_family, title1 = 'PSP', title2 = 'Johnson', title3 = 'Scope3P'):   
+
+    for family in common_family:
+        pssm1 = psp[family]
+        pssm2 = johnson[family]
+        pssm3 = scope3p[family]
+
+        # Add missing columns to the PSSMs
+        pssm1 = add_missing_columns(pssm1, all_sequences)
+        pssm2 = add_missing_columns(pssm2, all_sequences)
+        pssm3 = add_missing_columns(pssm3, all_sequences)
+
+        pssm1['position'] = list(range(-7, 8))
+        pssm1.set_index('position', inplace=True)
+
+        pssm2['position'] = list(range(-7, 8))
+        pssm2.set_index('position', inplace=True)
+
+        pssm3['position'] = list(range(-7, 8))
+        pssm3.set_index('position', inplace=True)
+
+        pssm1 = pssm1.T.sort_index()
+        pssm2 = pssm2.T.sort_index()  
+        pssm3 = pssm3.T.sort_index()
+
+
+
+        # make the columns match
+        try:
+            # Plotting the PSSMs and distances
+            fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+            # set figure title 
+            fig.suptitle(family)
+
+            sns.heatmap(pssm1, ax=axes[0], cmap='viridis', cbar=True)
+            axes[0].set_title(title1)
+
+            sns.heatmap(pssm2, ax=axes[1], cmap='viridis', cbar=True)
+            axes[1].set_title(title2)
+
+            sns.heatmap(pssm3, ax=axes[2], cmap='viridis', cbar=True)
+            axes[2].set_title(title3)
+            
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(family, e)
